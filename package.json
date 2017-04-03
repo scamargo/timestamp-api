@@ -9,6 +9,7 @@
   "author": "Sergio",
   "license": "MIT",
   "dependencies": {
+    "datejs": "^1.0.0-rc3",
     "express": "^4.15.2"
   }
 }
