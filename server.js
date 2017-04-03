@@ -3,40 +3,43 @@ var path = require('path');
 var app = express();
 require('datejs'); //extends Date object
 
-var result = {unix: null, natural: null};
+var result = {};
+
+var monthNames = ["January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+];
 
 app.get('/',function(req,res){
-   console.log(req.params.date);
-   res.send(result);
+    result = {unix: null, natural: null};
+    res.send(result);
 });
 
 app.get('/:date',function(req,res){
-   console.log(req.params.date);
-   var date = new Date(req.params.date);
-   
-   if(!isNaN(req.params.date)) {
-       result.unix = req.params.date;
-   } else if (isValidDate(date)) {
-       //try to convert to date object
-       result.natural = date;
-       result.unix = converToUnixTime(req.params.date);
-   }
+    result = {unix: null, natural: null};
+    var date = new Date(req.params.date);
+    
+    if(!isNaN(req.params.date)) {
+        date = new Date(req.params.date*1000);
+        result.unix = converToUnixTime(date);
+        result.natural = convertToNaturalTime(date);
+    }
+    else if (isValidDate(date)) {
+        result.natural = convertToNaturalTime(date);
+        result.unix = converToUnixTime(date);
+    }
    
    res.send(result);
-   //return null object when input is null
 });
 
 function isValidDate(d) {
     var result = false;
     if ( Object.prototype.toString.call(d) === "[object Date]" ) {
       // it is a date
-      console.log("is a date");
       if ( isNaN( d.getTime() ) ) {  // d.valueOf() could also work
         // date is not valid
       }
       else {
         // date is valid
-        console.log("valid date");
         result = true;
       }
     }
@@ -45,6 +48,11 @@ function isValidDate(d) {
 
 function converToUnixTime(d) {
     return Date.parse(d).getTime()/1000;
+}
+
+function convertToNaturalTime(d) {
+    return monthNames[d.getMonth()] + " " +
+    d.getDate() + ", " + d.getFullYear();
 }
 
 app.listen(8080, function(){
