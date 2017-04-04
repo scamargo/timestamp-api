@@ -3,6 +3,8 @@ var path = require('path');
 var app = express();
 require('datejs'); //extends Date object
 
+var port = process.env.PORT || 8080;
+
 var result = {};
 
 var monthNames = ["January", "February", "March", "April", "May", "June",
@@ -55,6 +57,6 @@ function convertToNaturalTime(d) {
     d.getDate() + ", " + d.getFullYear();
 }
 
-app.listen(8080, function(){
-    console.log("listening on 8080")
+app.listen(port, function(){
+    console.log("listening on " + port);
 });
